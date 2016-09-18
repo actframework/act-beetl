@@ -43,7 +43,7 @@ public class BeetlView extends View {
     protected Template loadTemplate(String resourcePath, ActContext context) {
         _init();
         org.beetl.core.Template template = beetl.getTemplate(resourcePath);
-        return new BeetlTemplate(template, this);
+        return null == template ? null : new BeetlTemplate(template, this);
     }
 
     private void _init() {
