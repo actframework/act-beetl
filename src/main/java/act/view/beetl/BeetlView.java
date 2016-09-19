@@ -67,6 +67,11 @@ public class BeetlView extends View {
         AppConfig config = app.config();
         try {
             Configuration conf = Configuration.defaultConfiguration();
+            if(Act.isDev()){
+            		conf.setErrorHandlerClass("org.beetl.ext.web.WebErrorHandler");
+            }else{
+            		conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
+            }
             String templateHome = templateHome(config);
             templateHome = new File(app.layout().resource(app.base()), templateHome).getAbsolutePath();
             // loader = new  ClasspathResourceLoader(templateHome) 

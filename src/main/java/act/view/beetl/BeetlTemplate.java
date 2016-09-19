@@ -26,10 +26,8 @@ public class BeetlTemplate extends TemplateBase {
     protected void merge(Map<String, Object> renderArgs, H.Response response) {
         beetlTemplate.binding(renderArgs);
         view.templateModifier.apply(beetlTemplate);
-        if (view.directByteOutput) {
-            beetlTemplate.renderTo(response.outputStream());
-        } else {
-            beetlTemplate.renderTo(response.writer());
-        }
+        	String str = beetlTemplate.render();
+        response.writeContent(str);
+       
     }
 }
