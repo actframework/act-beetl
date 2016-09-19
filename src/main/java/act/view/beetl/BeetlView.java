@@ -10,6 +10,7 @@ import act.view.View;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
+import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.resource.FileResourceLoader;
 import org.beetl.ext.web.WebRenderExt;
 import org.osgl.$;
@@ -42,6 +43,9 @@ public class BeetlView extends View {
     @Override
     protected Template loadTemplate(String resourcePath, ActContext context) {
         _init();
+        if(beetl.getResourceLoader().exist(resourcePath)){
+        	throw new RuntimeException("resource "+resourcePath+" is not exist");
+        }
         org.beetl.core.Template template = beetl.getTemplate(resourcePath);
         return null == template ? null : new BeetlTemplate(template, this);
     }
@@ -65,6 +69,7 @@ public class BeetlView extends View {
             Configuration conf = Configuration.defaultConfiguration();
             String templateHome = templateHome(config);
             templateHome = new File(app.layout().resource(app.base()), templateHome).getAbsolutePath();
+            // loader = new  ClasspathResourceLoader(templateHome) 
             ResourceLoader loader = new FileResourceLoader(templateHome);
             beetl = new GroupTemplate(loader, conf);
             String strWebAppExt = beetl.getConf().getWebAppExt();
