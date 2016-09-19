@@ -44,10 +44,10 @@ public class BeetlView extends View {
     protected Template loadTemplate(String resourcePath, ActContext context) {
         _init();
         if(beetl.getResourceLoader().exist(resourcePath)){
-        	throw new RuntimeException("resource "+resourcePath+" is not exist");
+        	return null;
         }
         org.beetl.core.Template template = beetl.getTemplate(resourcePath);
-        return null == template ? null : new BeetlTemplate(template, this);
+        return new BeetlTemplate(template, this);
     }
 
     private void _init() {
