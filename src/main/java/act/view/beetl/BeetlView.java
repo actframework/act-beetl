@@ -1,7 +1,6 @@
 package act.view.beetl;
 
 import act.Act;
-import act.app.ActionContext;
 import act.app.App;
 import act.conf.AppConfig;
 import act.util.ActContext;
@@ -10,17 +9,14 @@ import act.view.View;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
-import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.resource.FileResourceLoader;
 import org.beetl.ext.web.WebRenderExt;
 import org.osgl.$;
 import org.osgl.Osgl;
 import org.osgl.exception.ConfigurationException;
-import org.osgl.http.H;
 import org.osgl.util.E;
 import org.osgl.util.S;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
@@ -67,10 +63,10 @@ public class BeetlView extends View {
         AppConfig config = app.config();
         try {
             Configuration conf = Configuration.defaultConfiguration();
-            if(Act.isDev()){
-            		conf.setErrorHandlerClass("org.beetl.ext.web.WebErrorHandler");
-            }else{
-            		conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
+            if (Act.isDev()) {
+                conf.setErrorHandlerClass("org.beetl.ext.web.WebErrorHandler");
+            } else {
+                conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
             }
             String templateHome = templateHome(config);
             templateHome = new File(app.layout().resource(app.base()), templateHome).getAbsolutePath();
