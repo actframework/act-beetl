@@ -1,7 +1,6 @@
 package act.view.beetl;
 
 import act.app.SourceInfo;
-import act.view.ActServerError;
 import act.view.TemplateError;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.beetl.core.ConsoleErrorHandler;
