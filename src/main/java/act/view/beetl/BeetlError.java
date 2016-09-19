@@ -2,52 +2,50 @@ package act.view.beetl;
 
 import act.app.SourceInfo;
 import act.view.ActServerError;
+import org.apache.commons.io.input.ReaderInputStream;
+import org.beetl.core.ConsoleErrorHandler;
+import org.beetl.core.Resource;
+import org.beetl.core.ResourceLoader;
 import org.beetl.core.exception.BeetlException;
-import org.osgl.util.E;
-import org.rythmengine.exception.RythmException;
+import org.beetl.core.exception.ErrorInfo;
+import org.osgl.util.C;
+import org.osgl.util.IO;
+import org.osgl.util.S;
 
 import java.util.List;
 
 public class BeetlError extends ActServerError {
-    private SourceInfo templateInfo;
 
     public BeetlError(BeetlException t) {
         super(t);
     }
 
-    public RythmException rythmException() {
-        return (RythmException) getCause();
-    }
-
-    public SourceInfo templateSourceInfo() {
-        return templateInfo;
+    public BeetlException beetlException() {
+        return (BeetlException) getCause();
     }
 
     @Override
     protected void populateSourceInfo(Throwable t) {
         BeetlException re = (BeetlException) t;
-        sourceInfo = new BeetlSourceInfo(re, true);
-        templateInfo = new BeetlSourceInfo(re, false);
+        sourceInfo = new BeetlSourceInfo(re);
     }
 
-    private static class BeetlSourceInfo implements SourceInfo {
-
-        BeetlSourceInfo(BeetlException e, boolean javaSource) {
-            throw E.tbd();
-//            fileName = e.templateName;
-//            if (javaSource) {
-//                lineNumber = e.javaLineNumber;
-//                String jsrc = e.javaSource;
-//                lines = null != jsrc ? C.listOf(jsrc.split("[\n]")) : C.<String>list();
-//            } else {
-//                lineNumber = e.templateLineNumber;
-//                lines = C.listOf(e.templateSource.split("[\n]"));
-//            }
-        }
+    private static class BeetlSourceInfo extends ConsoleErrorHandler implements SourceInfo {
 
         private String fileName;
         private List<String> lines;
         private int lineNumber;
+
+
+        BeetlSourceInfo(BeetlException e) {
+            ErrorInfo error = new ErrorInfo(e);
+            lineNumber = error.getErrorTokenLine();
+            ResourceLoader loader = e.gt.getResourceLoader();
+            Resource resource = loader.getResource(e.resourceId);
+            String content = IO.readContentAsString(new ReaderInputStream(resource.openReader()));
+            lines = S.notBlank(content) ? C.listOf(content.split("[\n\r]+")) : C.<String>list();
+            fileName = resource.getId();
+        }
 
         @Override
         public String fileName() {
