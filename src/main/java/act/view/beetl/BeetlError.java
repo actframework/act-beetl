@@ -2,6 +2,7 @@ package act.view.beetl;
 
 import act.app.SourceInfo;
 import act.view.ActServerError;
+import act.view.TemplateError;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.beetl.core.ConsoleErrorHandler;
 import org.beetl.core.Resource;
@@ -14,7 +15,7 @@ import org.osgl.util.S;
 
 import java.util.List;
 
-public class BeetlError extends ActServerError {
+public class BeetlError extends TemplateError {
 
     public BeetlError(BeetlException t) {
         super(t);
@@ -27,7 +28,12 @@ public class BeetlError extends ActServerError {
     @Override
     protected void populateSourceInfo(Throwable t) {
         BeetlException re = (BeetlException) t;
-        sourceInfo = new BeetlSourceInfo(re);
+        templateInfo = new BeetlSourceInfo(re);
+    }
+
+    @Override
+    public String errorMessage() {
+        return getCause().getMessage();
     }
 
     private static class BeetlSourceInfo extends ConsoleErrorHandler implements SourceInfo {
