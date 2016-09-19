@@ -43,8 +43,8 @@ public class BeetlView extends View {
     @Override
     protected Template loadTemplate(String resourcePath, ActContext context) {
         _init();
-        if(beetl.getResourceLoader().exist(resourcePath)){
-        	return null;
+        if (beetl.getResourceLoader().exist(resourcePath)) {
+            return null;
         }
         org.beetl.core.Template template = beetl.getTemplate(resourcePath);
         return new BeetlTemplate(template, this);
