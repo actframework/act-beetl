@@ -36,15 +36,17 @@ public class BeetlError extends TemplateError {
 
     @Override
     public String errorMessage() {
-    	
-    	BeetlException ex = (BeetlException) getCause();
-    	ErrorInfo error = new ErrorInfo((BeetlException) getCause());
-		int line = error.getErrorTokenLine();
-		StringBuilder sb = new StringBuilder(">>").append(error.getErrorCode())
-				.append(":<b>").append(error.getErrorTokenText()).append(" </b>  @")
-				.append(ex.resourceId);
-		sb.append("<br>check server console for detail");
-		
+        ErrorInfo error = new ErrorInfo((BeetlException) getCause());
+        StringBuilder sb = new StringBuilder(error.getType());
+        String tokenText = error.getErrorTokenText();
+        if (S.notBlank(tokenText)) {
+            sb.append(":<b>").append(error.getErrorTokenText()).append(" </b>");
+        }
+        String msg = error.getMsg();
+        if (S.notBlank(msg)) {
+            sb.append("<br><pre>").append(msg).append("</pre");
+        }
+
         return sb.toString();
     }
 

@@ -72,7 +72,7 @@ public class BeetlView extends View {
             // loader = new  ClasspathResourceLoader(templateHome) 
             ResourceLoader loader = new FileResourceLoader(templateHome);
             beetl = new GroupTemplate(loader, conf);
-            
+
             String strWebAppExt = beetl.getConf().getWebAppExt();
             initTemplateModifier(strWebAppExt);
             directByteOutput = conf.isDirectByteOutput();
@@ -114,11 +114,25 @@ public class BeetlView extends View {
             };
         }
     }
-    
-   public static class ACTDefaultNativeSecurityManager extends DefaultNativeSecurityManager{
-    	public boolean permit(String resourceId, Class c, Object target, String method){
-    		return true ;
-    	}
+
+    public static class ACTDefaultNativeSecurityManager extends DefaultNativeSecurityManager {
+        // Code copied from https://github.com/javamonkey/beetl2.0/blob/master/beetl-core/src/main/java/org/beetl/core/DefaultNativeSecurityManager.java
+        public boolean permit(String resourceId, Class c, Object target, String method) {
+            if (c.isArray()) {
+                //允许调用，但实际上会在在其后调用中报错。不归此处管理
+                return true;
+            }
+            String className = c.getName();
+            String name = c.getSimpleName();
+            if (className.startsWith("java.lang")) {
+                if (name.equals("Runtime") || name.equals("Process") || name.equals("ProcessBuilder")
+                        || name.equals("System")) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 
 }
