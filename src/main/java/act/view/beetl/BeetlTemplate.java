@@ -2,7 +2,6 @@ package act.view.beetl;
 
 import act.view.TemplateBase;
 import org.beetl.core.Template;
-import org.beetl.core.exception.BeetlException;
 
 import java.util.Map;
 
@@ -22,8 +21,8 @@ public class BeetlTemplate extends TemplateBase {
             beetlTemplate.binding(renderArgs);
             view.templateModifier.apply(beetlTemplate);
             return beetlTemplate.render();
-        } catch (BeetlException be) {
-            throw new BeetlError(be);
+        } catch (org.beetl.core.exception.BeetlException be) {
+            throw new BeetlException(be);
         }
     }
 

@@ -1,42 +1,35 @@
 package act.view.beetl;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.List;
-
+import act.app.SourceInfo;
+import act.view.TemplateException;
 import org.apache.commons.io.input.ReaderInputStream;
-import org.beetl.core.ConsoleErrorHandler;
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
-import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.ErrorInfo;
+import org.osgl.$;
 import org.osgl.util.C;
 import org.osgl.util.IO;
 import org.osgl.util.S;
 
-import act.app.SourceInfo;
-import act.view.TemplateError;
+public class BeetlException extends TemplateException {
 
-public class BeetlError extends TemplateError {
-
-    public BeetlError(BeetlException t) {
+    public BeetlException(org.beetl.core.exception.BeetlException t) {
         super(t);
     }
 
-    public BeetlException beetlException() {
-        return (BeetlException) getCause();
+    public org.beetl.core.exception.BeetlException beetlException() {
+        return (org.beetl.core.exception.BeetlException) getCause();
     }
 
     @Override
     protected void populateSourceInfo(Throwable t) {
-        BeetlException re = (BeetlException) t;
+        org.beetl.core.exception.BeetlException re = (org.beetl.core.exception.BeetlException) t;
         templateInfo = new BeetlSourceInfo(re);
     }
 
     @Override
     public String errorMessage() {
-        ErrorInfo error = new ErrorInfo((BeetlException) getCause());
+        ErrorInfo error = new ErrorInfo((org.beetl.core.exception.BeetlException) getCause());
         StringBuilder sb = new StringBuilder(error.getType());
         String tokenText = error.getErrorTokenText();
         if (S.notBlank(tokenText)) {
@@ -50,14 +43,9 @@ public class BeetlError extends TemplateError {
         return sb.toString();
     }
 
-    private static class BeetlSourceInfo extends ConsoleErrorHandler implements SourceInfo {
+    private static class BeetlSourceInfo extends SourceInfo.Base {
 
-        private String fileName;
-        private List<String> lines;
-        private int lineNumber;
-
-
-        BeetlSourceInfo(BeetlException e) {
+        BeetlSourceInfo(org.beetl.core.exception.BeetlException e) {
             ErrorInfo error = new ErrorInfo(e);
             lineNumber = error.getErrorTokenLine();
             ResourceLoader loader = e.gt.getResourceLoader();
@@ -67,24 +55,5 @@ public class BeetlError extends TemplateError {
             fileName = resource.getId();
         }
 
-        @Override
-        public String fileName() {
-            return fileName;
-        }
-
-        @Override
-        public List<String> lines() {
-            return lines;
-        }
-
-        @Override
-        public Integer lineNumber() {
-            return lineNumber;
-        }
-
-        @Override
-        public boolean isSourceAvailable() {
-            return true;
-        }
     }
 }
