@@ -1,7 +1,10 @@
 package act.view.beetl;
 
-import act.app.SourceInfo;
-import act.view.TemplateError;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.List;
+
 import org.apache.commons.io.input.ReaderInputStream;
 import org.beetl.core.ConsoleErrorHandler;
 import org.beetl.core.Resource;
@@ -12,7 +15,8 @@ import org.osgl.util.C;
 import org.osgl.util.IO;
 import org.osgl.util.S;
 
-import java.util.List;
+import act.app.SourceInfo;
+import act.view.TemplateError;
 
 public class BeetlError extends TemplateError {
 
@@ -32,7 +36,16 @@ public class BeetlError extends TemplateError {
 
     @Override
     public String errorMessage() {
-        return getCause().getMessage();
+    	
+    	BeetlException ex = (BeetlException) getCause();
+    	ErrorInfo error = new ErrorInfo((BeetlException) getCause());
+		int line = error.getErrorTokenLine();
+		StringBuilder sb = new StringBuilder(">>").append(error.getErrorCode())
+				.append(":<b>").append(error.getErrorTokenText()).append(" </b>  @")
+				.append(ex.resourceId);
+		sb.append("<br>check server console for detail");
+		
+        return sb.toString();
     }
 
     private static class BeetlSourceInfo extends ConsoleErrorHandler implements SourceInfo {

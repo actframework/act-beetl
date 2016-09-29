@@ -1,12 +1,10 @@
 package act.view.beetl;
 
-import act.Act;
-import act.app.App;
-import act.conf.AppConfig;
-import act.util.ActContext;
-import act.view.Template;
-import act.view.View;
+import java.io.File;
+import java.io.IOException;
+
 import org.beetl.core.Configuration;
+import org.beetl.core.DefaultNativeSecurityManager;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.resource.FileResourceLoader;
@@ -17,8 +15,12 @@ import org.osgl.exception.ConfigurationException;
 import org.osgl.util.E;
 import org.osgl.util.S;
 
-import java.io.File;
-import java.io.IOException;
+import act.Act;
+import act.app.App;
+import act.conf.AppConfig;
+import act.util.ActContext;
+import act.view.Template;
+import act.view.View;
 
 public class BeetlView extends View {
 
@@ -64,11 +66,13 @@ public class BeetlView extends View {
         try {
             Configuration conf = Configuration.defaultConfiguration();
             conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
+            conf.setNativeSecurity("act.view.beetl.BeetlView$ACTDefaultNativeSecurityManager");
             String templateHome = templateHome(config);
             templateHome = new File(app.layout().resource(app.base()), templateHome).getAbsolutePath();
             // loader = new  ClasspathResourceLoader(templateHome) 
             ResourceLoader loader = new FileResourceLoader(templateHome);
             beetl = new GroupTemplate(loader, conf);
+            
             String strWebAppExt = beetl.getConf().getWebAppExt();
             initTemplateModifier(strWebAppExt);
             directByteOutput = conf.isDirectByteOutput();
@@ -109,6 +113,12 @@ public class BeetlView extends View {
                 }
             };
         }
+    }
+    
+   public static class ACTDefaultNativeSecurityManager extends DefaultNativeSecurityManager{
+    	public boolean permit(String resourceId, Class c, Object target, String method){
+    		return true ;
+    	}
     }
 
 }
