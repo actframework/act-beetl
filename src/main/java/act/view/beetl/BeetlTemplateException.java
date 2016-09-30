@@ -7,12 +7,13 @@ import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.exception.ErrorInfo;
 import org.osgl.util.C;
+import org.osgl.util.E;
 import org.osgl.util.IO;
 import org.osgl.util.S;
 
-public class BeetlException extends TemplateException {
+public class BeetlTemplateException extends TemplateException {
 
-    public BeetlException(org.beetl.core.exception.BeetlException t) {
+    public BeetlTemplateException(org.beetl.core.exception.BeetlException t) {
         super(t);
     }
 
@@ -29,6 +30,11 @@ public class BeetlException extends TemplateException {
     @Override
     public String errorMessage() {
         ErrorInfo error = new ErrorInfo((org.beetl.core.exception.BeetlException) getDirectCause());
+        if ("NATIVE_CALL_EXCEPTION".equals(error.getErrorCode())) {
+            Throwable t = error.getCause();
+            String msg = t.getMessage();
+            return S.blank(msg) ? t.toString() : msg;
+        }
         StringBuilder sb = new StringBuilder(error.getType());
         String tokenText = error.getErrorTokenText();
         if (S.notBlank(tokenText)) {
@@ -43,7 +49,15 @@ public class BeetlException extends TemplateException {
     }
 
     @Override
+    protected boolean isTemplateEngineInvokeLine(String s) {
+        return s.contains("org.beetl.core.om.ObjectUtil.invoke");
+    }
+
+    @Override
     public boolean isErrorSpot(String traceLine, String nextTraceLine) {
+        if (!traceLine.contains("sun.reflect") && isTemplateEngineInvokeLine(nextTraceLine)) {
+            return true;
+        }
         return super.isErrorSpot(traceLine, nextTraceLine);
     }
 

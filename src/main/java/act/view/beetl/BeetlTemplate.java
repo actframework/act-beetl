@@ -22,7 +22,7 @@ public class BeetlTemplate extends TemplateBase {
             view.templateModifier.apply(beetlTemplate);
             return beetlTemplate.render();
         } catch (org.beetl.core.exception.BeetlException be) {
-            throw new BeetlException(be);
+            throw new BeetlTemplateException(be);
         }
     }
 
