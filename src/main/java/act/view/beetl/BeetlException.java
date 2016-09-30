@@ -6,7 +6,6 @@ import org.apache.commons.io.input.ReaderInputStream;
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.exception.ErrorInfo;
-import org.osgl.$;
 import org.osgl.util.C;
 import org.osgl.util.IO;
 import org.osgl.util.S;
@@ -29,7 +28,7 @@ public class BeetlException extends TemplateException {
 
     @Override
     public String errorMessage() {
-        ErrorInfo error = new ErrorInfo((org.beetl.core.exception.BeetlException) getCause());
+        ErrorInfo error = new ErrorInfo((org.beetl.core.exception.BeetlException) getDirectCause());
         StringBuilder sb = new StringBuilder(error.getType());
         String tokenText = error.getErrorTokenText();
         if (S.notBlank(tokenText)) {
@@ -37,10 +36,15 @@ public class BeetlException extends TemplateException {
         }
         String msg = error.getMsg();
         if (S.notBlank(msg)) {
-            sb.append("<br><pre>").append(msg).append("</pre");
+            sb.append("<br><pre>").append(msg).append("</pre>");
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean isErrorSpot(String traceLine, String nextTraceLine) {
+        return super.isErrorSpot(traceLine, nextTraceLine);
     }
 
     private static class BeetlSourceInfo extends SourceInfo.Base {
