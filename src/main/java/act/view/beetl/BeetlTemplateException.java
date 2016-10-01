@@ -1,6 +1,5 @@
 package act.view.beetl;
 
-import act.Act;
 import act.app.SourceInfo;
 import act.view.TemplateException;
 import org.apache.commons.io.input.ReaderInputStream;
@@ -12,32 +11,40 @@ import org.osgl.util.C;
 import org.osgl.util.IO;
 import org.osgl.util.S;
 
+import java.util.List;
+
 public class BeetlTemplateException extends TemplateException {
 
-    private boolean isNativeException = false;
     private ErrorInfo errorInfo;
     private BeetlException beetlException;
 
     public BeetlTemplateException(BeetlException t) {
         super(t);
+    }
+
+    @Override
+    protected void init() {
+        BeetlException t = (BeetlException) getDirectCause();
         beetlException = t;
         errorInfo = new ErrorInfo(t);
-        isNativeException = errorInfo.getErrorCode().startsWith("NATIVE_");
-        if (Act.isDev()) {
-            templateInfo = new BeetlSourceInfo(beetlException, errorInfo);
-            if (isNativeException) {
-                sourceInfo = getJavaSourceInfo(t.getCause());
-            }
-        }
     }
 
     @Override
     protected void populateSourceInfo(Throwable t) {
+        templateInfo = new BeetlSourceInfo(beetlException, errorInfo);
+        if (isNativeException()) {
+            sourceInfo = getJavaSourceInfo(t.getCause());
+        }
+    }
+
+    @Override
+    public List<String> stackTrace() {
+        return isNativeException() ? super.stackTrace() : C.<String>list();
     }
 
     @Override
     public String errorMessage() {
-        if (isNativeException) {
+        if (isNativeException()) {
             Throwable t = errorInfo.getCause();
             String msg = t.getMessage();
             return S.blank(msg) ? t.toString() : msg;
@@ -66,6 +73,10 @@ public class BeetlTemplateException extends TemplateException {
             return true;
         }
         return super.isErrorSpot(traceLine, nextTraceLine);
+    }
+
+    private boolean isNativeException() {
+        return errorInfo.getErrorCode().startsWith("NATIVE_");
     }
 
     private static class BeetlSourceInfo extends SourceInfo.Base {

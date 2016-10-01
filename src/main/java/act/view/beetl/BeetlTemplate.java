@@ -1,6 +1,7 @@
 package act.view.beetl;
 
 import act.Act;
+import act.app.ActionContext;
 import act.view.TemplateBase;
 import org.beetl.core.Template;
 
@@ -14,6 +15,18 @@ public class BeetlTemplate extends TemplateBase {
     BeetlTemplate(Template beetlTemplate, BeetlView view) {
         this.beetlTemplate = beetlTemplate;
         this.view = view;
+    }
+
+    @Override
+    public void merge(ActionContext context) {
+        if (Act.isDev()) {
+            super.merge(context);
+        }
+        if (view.directByteOutput) {
+            beetlTemplate.renderTo(context.resp().outputStream());
+        } else {
+            beetlTemplate.renderTo(context.resp().writer());
+        }
     }
 
     @Override

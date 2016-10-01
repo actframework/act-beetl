@@ -1,12 +1,16 @@
 package act.view.beetl;
 
-import java.io.File;
-import java.io.IOException;
-
+import act.Act;
+import act.app.App;
+import act.app.event.AppEventId;
+import act.util.ActContext;
+import act.view.Template;
+import act.view.View;
 import org.beetl.core.Configuration;
 import org.beetl.core.DefaultNativeSecurityManager;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
+import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.resource.FileResourceLoader;
 import org.beetl.ext.web.WebRenderExt;
 import org.osgl.$;
@@ -15,12 +19,7 @@ import org.osgl.exception.ConfigurationException;
 import org.osgl.util.E;
 import org.osgl.util.S;
 
-import act.Act;
-import act.app.App;
-import act.conf.AppConfig;
-import act.util.ActContext;
-import act.view.Template;
-import act.view.View;
+import java.io.IOException;
 
 public class BeetlView extends View {
 
@@ -40,7 +39,6 @@ public class BeetlView extends View {
 
     @Override
     protected Template loadTemplate(String resourcePath, ActContext context) {
-        _init();
         if (!beetl.getResourceLoader().exist(resourcePath)) {
             return null;
         }
@@ -48,29 +46,24 @@ public class BeetlView extends View {
         return new BeetlTemplate(template, this);
     }
 
-    private void _init() {
-        if (null != beetl) {
-            return;
-        }
-        synchronized (this) {
-            if (null != beetl) {
-                return;
+    @Override
+    protected void init(final App app) {
+        app.jobManager().on(AppEventId.CLASS_LOADER_INITIALIZED, new Runnable() {
+            @Override
+            public void run() {
+                doInit(app);
             }
-            doInit();
-        }
+        });
     }
 
-    private void doInit() {
-        App app = Act.app();
-        AppConfig config = app.config();
+    private void doInit(App app) {
         try {
             Configuration conf = Configuration.defaultConfiguration();
             conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
             conf.setNativeSecurity("act.view.beetl.BeetlView$ACTDefaultNativeSecurityManager");
-            String templateHome = templateHome(config);
-            templateHome = new File(app.layout().resource(app.base()), templateHome).getAbsolutePath();
-            // loader = new  ClasspathResourceLoader(templateHome) 
-            ResourceLoader loader = new FileResourceLoader(templateHome);
+            //ResourceLoader loader = new FileResourceLoader(templateRootDir().getAbsolutePath());
+            ClassLoader cl = app.classLoader();
+            ResourceLoader loader = new ClasspathResourceLoader(cl, templateHome());
             beetl = new GroupTemplate(loader, conf);
             beetl.setClassLoader(app.classLoader());
 
@@ -80,18 +73,6 @@ public class BeetlView extends View {
         } catch (IOException e) {
             throw E.ioException(e);
         }
-    }
-
-    private String templateHome(AppConfig config) {
-        String templateHome = config.templateHome();
-        if (S.blank(templateHome) || "default".equals(templateHome)) {
-            templateHome = "/" + name();
-        }
-        return templateHome;
-    }
-
-    @Override
-    protected void reload(final App app) {
     }
 
     private WebRenderExt getWebRenderExt(String clsName) {
