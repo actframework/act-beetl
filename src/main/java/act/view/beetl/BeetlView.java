@@ -11,7 +11,6 @@ import org.beetl.core.DefaultNativeSecurityManager;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.resource.ClasspathResourceLoader;
-import org.beetl.core.resource.FileResourceLoader;
 import org.beetl.ext.web.WebRenderExt;
 import org.osgl.$;
 import org.osgl.Osgl;
@@ -48,20 +47,10 @@ public class BeetlView extends View {
 
     @Override
     protected void init(final App app) {
-        app.jobManager().on(AppEventId.CLASS_LOADER_INITIALIZED, new Runnable() {
-            @Override
-            public void run() {
-                doInit(app);
-            }
-        });
-    }
-
-    private void doInit(App app) {
         try {
             Configuration conf = Configuration.defaultConfiguration();
             conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
             conf.setNativeSecurity("act.view.beetl.BeetlView$ACTDefaultNativeSecurityManager");
-            //ResourceLoader loader = new FileResourceLoader(templateRootDir().getAbsolutePath());
             ClassLoader cl = app.classLoader();
             ResourceLoader loader = new ClasspathResourceLoader(cl, templateHome());
             beetl = new GroupTemplate(loader, conf);
