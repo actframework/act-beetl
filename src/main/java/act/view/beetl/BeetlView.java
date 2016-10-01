@@ -72,6 +72,7 @@ public class BeetlView extends View {
             // loader = new  ClasspathResourceLoader(templateHome) 
             ResourceLoader loader = new FileResourceLoader(templateHome);
             beetl = new GroupTemplate(loader, conf);
+            beetl.setClassLoader(app.classLoader());
 
             String strWebAppExt = beetl.getConf().getWebAppExt();
             initTemplateModifier(strWebAppExt);

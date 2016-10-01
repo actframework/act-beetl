@@ -1,46 +1,53 @@
 package act.view.beetl;
 
+import act.Act;
 import act.app.SourceInfo;
 import act.view.TemplateException;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.ErrorInfo;
 import org.osgl.util.C;
-import org.osgl.util.E;
 import org.osgl.util.IO;
 import org.osgl.util.S;
 
 public class BeetlTemplateException extends TemplateException {
 
-    public BeetlTemplateException(org.beetl.core.exception.BeetlException t) {
-        super(t);
-    }
+    private boolean isNativeException = false;
+    private ErrorInfo errorInfo;
+    private BeetlException beetlException;
 
-    public org.beetl.core.exception.BeetlException beetlException() {
-        return (org.beetl.core.exception.BeetlException) getCause();
+    public BeetlTemplateException(BeetlException t) {
+        super(t);
+        beetlException = t;
+        errorInfo = new ErrorInfo(t);
+        isNativeException = errorInfo.getErrorCode().startsWith("NATIVE_");
+        if (Act.isDev()) {
+            templateInfo = new BeetlSourceInfo(beetlException, errorInfo);
+            if (isNativeException) {
+                sourceInfo = getJavaSourceInfo(t.getCause());
+            }
+        }
     }
 
     @Override
     protected void populateSourceInfo(Throwable t) {
-        org.beetl.core.exception.BeetlException re = (org.beetl.core.exception.BeetlException) t;
-        templateInfo = new BeetlSourceInfo(re);
     }
 
     @Override
     public String errorMessage() {
-        ErrorInfo error = new ErrorInfo((org.beetl.core.exception.BeetlException) getDirectCause());
-        if ("NATIVE_CALL_EXCEPTION".equals(error.getErrorCode())) {
-            Throwable t = error.getCause();
+        if (isNativeException) {
+            Throwable t = errorInfo.getCause();
             String msg = t.getMessage();
             return S.blank(msg) ? t.toString() : msg;
         }
-        StringBuilder sb = new StringBuilder(error.getType());
-        String tokenText = error.getErrorTokenText();
+        StringBuilder sb = new StringBuilder(errorInfo.getType());
+        String tokenText = errorInfo.getErrorTokenText();
         if (S.notBlank(tokenText)) {
-            sb.append(":<b>").append(error.getErrorTokenText()).append(" </b>");
+            sb.append(":<b>").append(errorInfo.getErrorTokenText()).append(" </b>");
         }
-        String msg = error.getMsg();
+        String msg = errorInfo.getMsg();
         if (S.notBlank(msg)) {
             sb.append("<br><pre>").append(msg).append("</pre>");
         }
@@ -63,11 +70,10 @@ public class BeetlTemplateException extends TemplateException {
 
     private static class BeetlSourceInfo extends SourceInfo.Base {
 
-        BeetlSourceInfo(org.beetl.core.exception.BeetlException e) {
-            ErrorInfo error = new ErrorInfo(e);
-            lineNumber = error.getErrorTokenLine();
-            ResourceLoader loader = e.gt.getResourceLoader();
-            Resource resource = loader.getResource(e.resourceId);
+        BeetlSourceInfo(BeetlException be, ErrorInfo errorInfo) {
+            lineNumber = errorInfo.getErrorTokenLine();
+            ResourceLoader loader = be.gt.getResourceLoader();
+            Resource resource = loader.getResource(be.resourceId);
             String content = IO.readContentAsString(new ReaderInputStream(resource.openReader()));
             lines = S.notBlank(content) ? C.listOf(content.split("[\n\r]+")) : C.<String>list();
             fileName = resource.getId();
