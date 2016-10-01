@@ -4,6 +4,7 @@ import act.Act;
 import act.app.ActionContext;
 import act.view.TemplateBase;
 import org.beetl.core.Template;
+import org.osgl.http.H;
 
 import java.util.Map;
 
@@ -18,14 +19,16 @@ public class BeetlTemplate extends TemplateBase {
     }
 
     @Override
-    public void merge(ActionContext context) {
+    protected void merge(Map<String, Object> renderArgs, H.Response response) {
         if (Act.isDev()) {
-            super.merge(context);
+            super.merge(renderArgs, response);
         }
+        beetlTemplate.binding(renderArgs);
+        view.templateModifier.apply(beetlTemplate);
         if (view.directByteOutput) {
-            beetlTemplate.renderTo(context.resp().outputStream());
+            beetlTemplate.renderTo(response.outputStream());
         } else {
-            beetlTemplate.renderTo(context.resp().writer());
+            beetlTemplate.renderTo(response.writer());
         }
     }
 
