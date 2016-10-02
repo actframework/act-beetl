@@ -23,14 +23,10 @@ public class BeetlTemplateException extends TemplateException {
     }
 
     @Override
-    protected void init() {
-        BeetlException t = (BeetlException) getDirectCause();
+    protected void populateSourceInfo(Throwable t0) {
+        BeetlException t = (BeetlException) t0;
         beetlException = t;
         errorInfo = new ErrorInfo(t);
-    }
-
-    @Override
-    protected void populateSourceInfo(Throwable t) {
         templateInfo = new BeetlSourceInfo(beetlException, errorInfo);
         if (isNativeException()) {
             sourceInfo = getJavaSourceInfo(t.getCause());
