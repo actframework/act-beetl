@@ -22,6 +22,7 @@ public class BeetlTemplate extends TemplateBase {
     protected void merge(Map<String, Object> renderArgs, H.Response response) {
         if (Act.isDev()) {
             super.merge(renderArgs, response);
+            return;
         }
         beetlTemplate.binding(renderArgs);
         view.templateModifier.apply(beetlTemplate);
