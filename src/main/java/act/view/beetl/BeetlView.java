@@ -86,6 +86,7 @@ public class BeetlView extends View {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class ACTDefaultNativeSecurityManager extends DefaultNativeSecurityManager {
         // Code copied from https://github.com/javamonkey/beetl2.0/blob/master/beetl-core/src/main/java/org/beetl/core/DefaultNativeSecurityManager.java
         public boolean permit(String resourceId, Class c, Object target, String method) {
