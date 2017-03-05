@@ -18,6 +18,8 @@
 ********************************************
 *            version history
 ********************************************
+0.7.0
+- Update to actFramework 0.7
 0.6.0
 - Update to ActFramework 0.6
 -->
@@ -29,7 +31,7 @@
   <groupId>org.actframework</groupId>
   <artifactId>act-beetl</artifactId>
   <packaging>jar</packaging>
-  <version>0.6.0-SNAPSHOT</version>
+  <version>0.7.0-SNAPSHOT</version>
 
   <name>ACT Beetl</name>
   <description>Implement ActFramework View with Beetl template engine</description>
@@ -39,7 +41,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <git.url>git@github.com:actframework/act-beetl.git</git.url>
-    <act.version>0.6.0-SNAPSHOT</act.version>
+    <act.version>0.7.0-SNAPSHOT</act.version>
     <beetl.version>2.7.12</beetl.version>
   </properties>
 
