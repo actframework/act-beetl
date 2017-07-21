@@ -41,8 +41,14 @@ public class BeetlTemplateException extends TemplateException {
     @Override
     public String errorMessage() {
         if (isNativeException()) {
-            Throwable t = rootCauseOf(errorInfo.getCause());
-            return t.toString();
+            Throwable cause = errorInfo.getCause();
+            while (null != cause) {
+                if (null == cause.getCause()) {
+                    return cause.getMessage();
+                }
+                cause = cause.getCause();
+            }
+            return S.concat(errorInfo.getErrorCode(), ": ", errorInfo.getMsg());
         }
         StringBuilder sb = new StringBuilder(errorInfo.getType());
         String tokenText = errorInfo.getErrorTokenText();

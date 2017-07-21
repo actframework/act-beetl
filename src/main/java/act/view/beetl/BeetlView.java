@@ -2,7 +2,6 @@ package act.view.beetl;
 
 import act.Act;
 import act.app.App;
-import act.app.event.AppEventId;
 import act.util.ActContext;
 import act.view.Template;
 import act.view.View;
@@ -11,6 +10,7 @@ import org.beetl.core.DefaultNativeSecurityManager;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.ext.web.WebRenderExt;
 import org.osgl.$;
 import org.osgl.Osgl;
@@ -22,6 +22,8 @@ import java.io.IOException;
 
 public class BeetlView extends View {
 
+    public static final String ID = "beetl";
+
     transient GroupTemplate beetl;
     $.Visitor<org.beetl.core.Template> templateModifier = new $.Visitor<org.beetl.core.Template>() {
         @Override
@@ -30,18 +32,31 @@ public class BeetlView extends View {
         }
     };
     boolean directByteOutput;
+    private String suffix;
+
 
     @Override
     public String name() {
-        return "beetl";
+        return ID;
     }
 
     @Override
     protected Template loadTemplate(String resourcePath, ActContext context) {
         if (!beetl.getResourceLoader().exist(resourcePath)) {
-            return null;
+            if (resourcePath.endsWith(suffix)) {
+                return null;
+            }
+            return loadTemplate(S.concat(resourcePath, suffix), context);
         }
         org.beetl.core.Template template = beetl.getTemplate(resourcePath);
+        return new BeetlTemplate(template, this);
+    }
+
+    private static final StringTemplateResourceLoader STRING_TEMPLATE_RESOURCE_LOADER = new StringTemplateResourceLoader();
+
+    @Override
+    protected Template loadInlineTemplate(String content, ActContext actContext) {
+        org.beetl.core.Template template = beetl.getTemplate(content, STRING_TEMPLATE_RESOURCE_LOADER);
         return new BeetlTemplate(template, this);
     }
 
@@ -59,6 +74,12 @@ public class BeetlView extends View {
             String strWebAppExt = beetl.getConf().getWebAppExt();
             initTemplateModifier(strWebAppExt);
             directByteOutput = conf.isDirectByteOutput();
+            suffix = app.config().get("view.beetl.suffix");
+            if (null == suffix) {
+                suffix = ".beetl";
+            } else {
+                suffix = suffix.startsWith(".") ? suffix : S.concat(".", suffix);
+            }
         } catch (IOException e) {
             throw E.ioException(e);
         }

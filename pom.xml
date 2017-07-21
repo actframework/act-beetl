@@ -18,6 +18,9 @@
 ********************************************
 *            version history
 ********************************************
+1.1.0
+* update to act-1.5.0
+
 1.0.0
 - first formal release
 0.7.0
@@ -42,8 +45,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <git.url>git@github.com:actframework/act-beetl.git</git.url>
-    <act.version>[1.0.0, 2.0.0)</act.version>
-    <beetl.version>[2.7.12, 3.0)</beetl.version>
+    <act.version>1.5.0-SNAPSHOT</act.version>
+    <beetl.version>2.7.20</beetl.version>
   </properties>
 
   <parent>
