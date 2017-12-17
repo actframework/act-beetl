@@ -85,7 +85,7 @@ public class BeetlTemplateException extends TemplateException {
         BeetlSourceInfo(BeetlException be, ErrorInfo errorInfo) {
             lineNumber = errorInfo.getErrorTokenLine();
             ResourceLoader loader = be.gt.getResourceLoader();
-            Resource resource = loader.getResource(be.resourceId);
+            Resource resource = be.resource;
             String content = IO.readContentAsString(new ReaderInputStream(resource.openReader()));
             lines = S.notBlank(content) ? C.listOf(content.split("[\n\r]+")) : C.<String>list();
             fileName = resource.getId();

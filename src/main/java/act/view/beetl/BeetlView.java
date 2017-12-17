@@ -2,7 +2,6 @@ package act.view.beetl;
 
 import act.Act;
 import act.app.App;
-import act.util.ActContext;
 import act.view.Template;
 import act.view.View;
 import org.beetl.core.Configuration;
@@ -41,12 +40,12 @@ public class BeetlView extends View {
     }
 
     @Override
-    protected Template loadTemplate(String resourcePath, ActContext context) {
+    protected Template loadTemplate(String resourcePath) {
         if (!beetl.getResourceLoader().exist(resourcePath)) {
             if (resourcePath.endsWith(suffix)) {
                 return null;
             }
-            return loadTemplate(S.concat(resourcePath, suffix), context);
+            return loadTemplate(S.concat(resourcePath, suffix));
         }
         org.beetl.core.Template template = beetl.getTemplate(resourcePath);
         return new BeetlTemplate(template, this);
@@ -55,7 +54,7 @@ public class BeetlView extends View {
     private static final StringTemplateResourceLoader STRING_TEMPLATE_RESOURCE_LOADER = new StringTemplateResourceLoader();
 
     @Override
-    protected Template loadInlineTemplate(String content, ActContext actContext) {
+    protected Template loadInlineTemplate(String content) {
         org.beetl.core.Template template = beetl.getTemplate(content, STRING_TEMPLATE_RESOURCE_LOADER);
         return new BeetlTemplate(template, this);
     }
