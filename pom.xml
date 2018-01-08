@@ -21,7 +21,7 @@
   <groupId>org.actframework</groupId>
   <artifactId>act-beetl</artifactId>
   <packaging>jar</packaging>
-  <version>1.2.2</version>
+  <version>1.2.3-SNAPSHOT</version>
 
   <name>ACT Beetl</name>
   <description>Implement ActFramework View with Beetl template engine</description>
