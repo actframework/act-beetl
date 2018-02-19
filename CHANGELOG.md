@@ -1,5 +1,12 @@
 # Act-Beetl Change Log
 
+1.2.2 - 9/Jan/2018
+* update beelt to 2.7.26
+* update act to 1.6.1
+
+1.2.1
+* apply new build system
+
 1.2.0
 * update to act-1.6.0
 
