@@ -1,5 +1,12 @@
 # Act-Beetl Change Log
 
+1.3.1 - 4/Mar/2018
+* update to act-1.8
+* update beetl to 2.7.27
+
+1.3.0
+* update act to 1.7
+
 1.2.2 - 9/Jan/2018
 * update beelt to 2.7.26
 * update act to 1.6.1
