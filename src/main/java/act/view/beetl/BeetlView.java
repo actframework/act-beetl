@@ -22,6 +22,7 @@ package act.view.beetl;
 
 import act.Act;
 import act.app.App;
+import act.inject.util.ConfigResourceLoader;
 import act.view.Template;
 import act.view.View;
 import org.beetl.core.Configuration;
@@ -34,11 +35,16 @@ import org.beetl.ext.web.WebRenderExt;
 import org.osgl.$;
 import org.osgl.Osgl;
 import org.osgl.exception.ConfigurationException;
+import org.osgl.inject.BeanSpec;
+import org.osgl.util.C;
 import org.osgl.util.E;
 import org.osgl.util.S;
 import osgl.version.Version;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
 
 public class BeetlView extends View {
 
@@ -85,7 +91,15 @@ public class BeetlView extends View {
     @Override
     protected void init(final App app) {
         try {
-            Configuration conf = Configuration.defaultConfiguration();
+            Map<String, String> map = C.Map("value", "/beetl.properties");
+            ConfigResourceLoader confLoader = new ConfigResourceLoader();
+            confLoader.init(map, BeanSpec.of(InputStream.class, app.injector()));
+            InputStream is = (InputStream) confLoader.get();
+            Properties p = null == is ? null : new Properties();
+            if (null != p) {
+                p.load(is);
+            }
+            Configuration conf = null == is ? Configuration.defaultConfiguration() : new Configuration(p);
             conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
             conf.setNativeSecurity("act.view.beetl.BeetlView$ACTDefaultNativeSecurityManager");
             ClassLoader cl = app.classLoader();

@@ -1,5 +1,9 @@
 # Act-Beetl Change Log
 
+1.4.0 - 25/Mar/2018
+* update to act-1.8.2
+* Load beetl properties on profile base #5
+
 1.3.1 - 4/Mar/2018
 * update to act-1.8
 * update beetl to 2.7.27
