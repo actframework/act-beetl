@@ -21,7 +21,6 @@ package act.view.beetl;
  */
 
 import act.Act;
-import act.app.ActionContext;
 import act.view.TemplateBase;
 import org.beetl.core.Template;
 import org.osgl.http.H;

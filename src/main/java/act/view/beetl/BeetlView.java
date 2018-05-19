@@ -33,7 +33,6 @@ import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.ext.web.WebRenderExt;
 import org.osgl.$;
-import org.osgl.Osgl;
 import org.osgl.exception.ConfigurationException;
 import org.osgl.inject.BeanSpec;
 import org.osgl.util.C;
@@ -55,7 +54,7 @@ public class BeetlView extends View {
     transient GroupTemplate beetl;
     $.Visitor<org.beetl.core.Template> templateModifier = new $.Visitor<org.beetl.core.Template>() {
         @Override
-        public void visit(org.beetl.core.Template template) throws Osgl.Break {
+        public void visit(org.beetl.core.Template template) throws $.Break {
             // do nothing visitor
         }
     };
@@ -134,7 +133,7 @@ public class BeetlView extends View {
             final WebRenderExt ext = getWebRenderExt(webAppExt);
             templateModifier = new $.Visitor<org.beetl.core.Template>() {
                 @Override
-                public void visit(org.beetl.core.Template template) throws Osgl.Break {
+                public void visit(org.beetl.core.Template template) throws $.Break {
                     // TODO: convert H.Request to HttpServletRequest
                     // TODO: convert H.Response to HttpServletResponse
                     ext.modify(template, beetl, null, null);
