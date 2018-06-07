@@ -2,6 +2,7 @@
 
 1.4.3 - 7/Jun/2018
 * It needs to close the Writer/Outputstream after rendering process #6
+* update beetl to 2.8.4
 * update act to 1.8.8-RC9
 
 1.4.2 - 29/May/2018
