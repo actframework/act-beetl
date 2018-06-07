@@ -24,7 +24,10 @@ import act.Act;
 import act.view.TemplateBase;
 import org.beetl.core.Template;
 import org.osgl.http.H;
+import org.osgl.util.IO;
 
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Map;
 
 public class BeetlTemplate extends TemplateBase {
@@ -46,9 +49,19 @@ public class BeetlTemplate extends TemplateBase {
         beetlTemplate.binding(renderArgs);
         view.templateModifier.apply(beetlTemplate);
         if (view.directByteOutput) {
-            beetlTemplate.renderTo(response.outputStream());
+            OutputStream os = response.outputStream();
+            try {
+                beetlTemplate.renderTo(response.outputStream());
+            } finally {
+                IO.close(os);
+            }
         } else {
-            beetlTemplate.renderTo(response.writer());
+            Writer writer = response.writer();
+            try {
+                beetlTemplate.renderTo(writer);
+            } finally {
+                IO.close(writer);
+            }
         }
     }
 

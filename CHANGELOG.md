@@ -1,5 +1,11 @@
 # Act-Beetl Change Log
 
+1.4.3 - 7/Jun/2018
+* It needs to close the Writer/Outputstream after rendering process #6
+* update act to 1.8.8-RC9
+
+1.4.2 - 29/May/2018
+* update act to 1.8.8-RC8
 
 1.4.1 - 02/Apr/2018
 * update act to 1.8.5
