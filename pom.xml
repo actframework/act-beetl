@@ -34,7 +34,7 @@
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>parent</artifactId>
-    <version>1.8.8-RC10</version>
+    <version>1.8.8-RC12-SNAPSHOT</version>
   </parent>
 
   <scm>
@@ -49,6 +49,12 @@
       <groupId>com.ibeetl</groupId>
       <artifactId>beetl</artifactId>
       <version>${beetl.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
     </dependency>
 
   </dependencies>
