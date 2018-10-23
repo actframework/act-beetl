@@ -75,16 +75,14 @@ public class BeetlView extends View {
             }
             return loadTemplate(S.concat(resourcePath, suffix));
         }
-        org.beetl.core.Template template = beetl.getTemplate(resourcePath);
-        return new BeetlTemplate(template, this);
+        return new BeetlTemplate(resourcePath, this);
     }
 
     private static final StringTemplateResourceLoader STRING_TEMPLATE_RESOURCE_LOADER = new StringTemplateResourceLoader();
 
     @Override
     protected Template loadInlineTemplate(String content) {
-        org.beetl.core.Template template = beetl.getTemplate(content, STRING_TEMPLATE_RESOURCE_LOADER);
-        return new BeetlTemplate(template, this);
+        return new BeetlTemplate(content, this);
     }
 
     @Override

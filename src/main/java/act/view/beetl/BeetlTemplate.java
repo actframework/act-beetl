@@ -23,8 +23,10 @@ package act.view.beetl;
 import act.Act;
 import act.view.TemplateBase;
 import org.beetl.core.Template;
+import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.osgl.http.H;
 import org.osgl.util.IO;
+import org.osgl.util.S;
 
 import java.io.OutputStream;
 import java.io.Writer;
@@ -32,13 +34,22 @@ import java.util.Map;
 
 public class BeetlTemplate extends TemplateBase {
 
-    private Template beetlTemplate;
+    private static StringTemplateResourceLoader STRING_TEMPLATE_RESOURCE_LOADER = new StringTemplateResourceLoader();
+
+    private boolean inline;
+    private String resourcePath;
     private BeetlView view;
 
-    BeetlTemplate(Template beetlTemplate, BeetlView view) {
-        this.beetlTemplate = beetlTemplate;
-        this.view = view;
+    BeetlTemplate(String resourcePath, BeetlView view) {
+        this(resourcePath, view, false);
     }
+
+    BeetlTemplate(String resourcePath, BeetlView view, boolean inline) {
+        this.resourcePath = S.requireNotBlank(resourcePath);
+        this.view = view;
+        this.inline = inline;
+    }
+
 
     @Override
     protected void merge(Map<String, Object> renderArgs, H.Response response) {
@@ -46,6 +57,7 @@ public class BeetlTemplate extends TemplateBase {
             super.merge(renderArgs, response);
             return;
         }
+        Template beetlTemplate = getTemplate();
         beetlTemplate.binding(renderArgs);
         view.templateModifier.apply(beetlTemplate);
         if (view.directByteOutput) {
@@ -70,6 +82,7 @@ public class BeetlTemplate extends TemplateBase {
         Thread t0 = Thread.currentThread();
         ClassLoader loader0 = t0.getContextClassLoader();
         try {
+            Template beetlTemplate = getTemplate();
             t0.setContextClassLoader(Act.app().classLoader());
             beetlTemplate.binding(renderArgs);
             view.templateModifier.apply(beetlTemplate);
@@ -79,6 +92,10 @@ public class BeetlTemplate extends TemplateBase {
         } finally {
             t0.setContextClassLoader(loader0);
         }
+    }
+
+    private Template getTemplate() {
+        return inline ? view.beetl.getTemplate(resourcePath, STRING_TEMPLATE_RESOURCE_LOADER) : view.beetl.getTemplate(resourcePath);
     }
 
 }
