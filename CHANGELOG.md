@@ -2,6 +2,8 @@
 
 1.4.5
 * BeetlTemplate is stateful and cannot be cached #7
+* update act to 1.8.8
+* update beetl to 2.9.3
 
 1.4.4 - 19/Jun/2018
 * update act to 1.8.8-RC10
