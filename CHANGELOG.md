@@ -1,5 +1,9 @@
 # Act-Beetl Change Log
 
+1.4.6
+* update act to 1.8.12
+* update beetl to 2.9.6
+
 1.4.5
 * BeetlTemplate is stateful and cannot be cached #7
 * update act to 1.8.8
