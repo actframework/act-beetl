@@ -1,5 +1,9 @@
 # Act-Beetl Change Log
 
+1.4.8 20/Apr/2019
+* update act to 1.8.20
+* update beetl to 2.9.9
+
 1.4.7 04/Feb/2019
 * update act to 1.8.18
 * update beetl to 2.9.8
