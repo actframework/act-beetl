@@ -20,7 +20,7 @@
 
   <artifactId>act-beetl</artifactId>
   <packaging>jar</packaging>
-  <version>1.5.0</version>
+  <version>1.5.1-SNAPSHOT</version>
 
   <name>ACT Beetl</name>
   <description>Implement ActFramework View with Beetl template engine</description>
