@@ -82,7 +82,7 @@ public class BeetlView extends View {
 
     @Override
     protected Template loadInlineTemplate(String content) {
-        return new BeetlTemplate(content, this);
+        return new BeetlTemplate(content, this, true);
     }
 
     @Override
