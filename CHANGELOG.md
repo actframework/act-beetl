@@ -1,5 +1,9 @@
 # Act-Beetl Change Log
 
+1.5.1 20/May/2019
+* update to act-1.8.22
+* update to beetl-3.0.0.M2
+
 1.5.0 26/Apr/2019
 * Server Error on invoking demo.view.ViewDemo.beetlInline - org.beetl.core.exception.BeetlException: #8
 * update act to 1.8.21
