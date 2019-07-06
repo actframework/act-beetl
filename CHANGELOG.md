@@ -1,5 +1,8 @@
 # Act-Beetl Change Log
 
+1.5.5 
+* it prints out warning message when `beetl.properties` not found #10
+
 1.5.4 2/Jul/2019
 * update to act-1.8.25
 * update to beetl-3.0.7.RELEASE

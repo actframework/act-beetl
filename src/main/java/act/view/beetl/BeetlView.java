@@ -89,12 +89,14 @@ public class BeetlView extends View {
     protected void init(final App app) {
         try {
             Map<String, String> map = C.Map("value", "/beetl.properties");
-            ConfigResourceLoader confLoader = new ConfigResourceLoader();
+            ConfigResourceLoader confLoader = new ConfigResourceLoader(true);
             confLoader.init(map, BeanSpec.of(InputStream.class, app.injector()));
             InputStream is = (InputStream) confLoader.get();
             Properties p = null == is ? null : new Properties();
             if (null != p) {
                 p.load(is);
+            } else {
+                info("beetl.properties not found, will use default configuration to init beetl template engine");
             }
             Configuration conf = null == is ? Configuration.defaultConfiguration() : new Configuration(p);
             conf.setErrorHandlerClass("org.beetl.core.ReThrowConsoleErrorHandler");
