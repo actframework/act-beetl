@@ -361,7 +361,7 @@ public class BeetlRegisterHelper {
             public void __call(int line) {
             }
         };
-        beetl.registerFormat("actFormat", new Format() {
+        beetl.registerFormat("format", new Format() {
             @Override
             public Object format(Object data, String pattern) {
                 return S.format(modelTemplate, data, pattern, modelTemplate.__curLocale(), null);
