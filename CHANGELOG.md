@@ -1,6 +1,8 @@
 # Act-Beetl Change Log
 
-1.5.5 
+1.6.0
+* Bridge rythm JavaTag and Format into Beetl Function and Format #13
+* Automatically register user defined Function, Format and TagFactory #12
 * it prints out warning message when `beetl.properties` not found #10
 
 1.5.4 2/Jul/2019

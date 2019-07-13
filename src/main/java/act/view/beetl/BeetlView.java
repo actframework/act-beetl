@@ -9,9 +9,9 @@ package act.view.beetl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,13 +22,12 @@ package act.view.beetl;
 
 import act.Act;
 import act.app.App;
+import act.app.event.SysEventId;
 import act.inject.util.ConfigResourceLoader;
+import act.util.SubClassFinder;
 import act.view.Template;
 import act.view.View;
-import org.beetl.core.Configuration;
-import org.beetl.core.DefaultNativeSecurityManager;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.ResourceLoader;
+import org.beetl.core.*;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.ext.web.WebRenderExt;
@@ -37,9 +36,12 @@ import org.osgl.exception.ConfigurationException;
 import org.osgl.inject.BeanSpec;
 import org.osgl.util.C;
 import org.osgl.util.E;
+import org.osgl.util.Keyword;
 import org.osgl.util.S;
 import osgl.version.Version;
 
+import javax.inject.Named;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -60,6 +62,10 @@ public class BeetlView extends View {
     };
     boolean directByteOutput;
     private String suffix;
+
+    public GroupTemplate getBeetl() {
+        return beetl;
+    }
 
 
     @Override
@@ -103,8 +109,7 @@ public class BeetlView extends View {
             conf.setNativeSecurity("act.view.beetl.BeetlView$ACTDefaultNativeSecurityManager");
             ClassLoader cl = app.classLoader();
             ResourceLoader loader = new ClasspathResourceLoader(cl, templateHome());
-            beetl = new GroupTemplate(loader, conf);
-            beetl.setClassLoader(app.classLoader());
+            beetl = new GroupTemplate(loader, conf, app.classLoader());
 
             String strWebAppExt = beetl.getConf().getWebAppExt();
             initTemplateModifier(strWebAppExt);
@@ -115,6 +120,17 @@ public class BeetlView extends View {
             } else {
                 suffix = suffix.startsWith(".") ? suffix : S.concat(".", suffix);
             }
+            app.jobManager().on(SysEventId.DEPENDENCY_INJECTOR_LOADED, new Runnable() {
+                @Override
+                public void run() {
+                    app.injector().registerProvider(GroupTemplate.class, new Provider<GroupTemplate>() {
+                        @Override
+                        public GroupTemplate get() {
+                            return beetl;
+                        }
+                    });
+                }
+            });
         } catch (IOException e) {
             throw E.ioException(e);
         }
@@ -140,6 +156,13 @@ public class BeetlView extends View {
                 }
             };
         }
+    }
+
+    @SubClassFinder
+    public void autoRegisterFunction(Class<Function> functionClass) {
+        Named named = functionClass.getAnnotation(Named.class);
+        String name = null != named ? named.value() : Keyword.of(functionClass.getName()).javaVariable();
+        beetl.registerFunction(name, Act.getInstance(functionClass));
     }
 
     @SuppressWarnings("unused")
