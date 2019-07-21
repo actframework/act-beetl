@@ -1,5 +1,9 @@
 # Act-Beetl Change Log
 
+1.6.1
+* update to act-1.8.26
+* update beetl to 3.0.10.RELEASE`
+
 1.6.0
 * Bridge rythm JavaTag and Format into Beetl Function and Format #13
 * Automatically register user defined Function, Format and TagFactory #12
