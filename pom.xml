@@ -20,7 +20,7 @@
 
   <artifactId>act-beetl</artifactId>
   <packaging>jar</packaging>
-  <version>1.6.2-SNAPSHOT</version>
+  <version>1.7.0-SNAPSHOT</version>
 
   <name>ACT Beetl</name>
   <description>Implement ActFramework View with Beetl template engine</description>
@@ -28,13 +28,13 @@
 
   <properties>
     <git.url>git@github.com:actframework/act-beetl.git</git.url>
-    <beetl.version>3.0.11.RELEASE</beetl.version>
+    <beetl.version>3.0.13.RELEASE</beetl.version>
   </properties>
 
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>parent</artifactId>
-    <version>1.8.27</version>
+    <version>1.8.29</version>
   </parent>
 
   <scm>
