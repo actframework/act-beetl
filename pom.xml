@@ -28,13 +28,13 @@
 
   <properties>
     <git.url>git@github.com:actframework/act-beetl.git</git.url>
-    <beetl.version>3.0.13.RELEASE</beetl.version>
+    <beetl.version>3.0.16.RELEASE</beetl.version>
   </properties>
 
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>parent</artifactId>
-    <version>1.8.29</version>
+    <version>1.8.31</version>
   </parent>
 
   <scm>
