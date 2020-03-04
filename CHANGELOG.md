@@ -1,6 +1,10 @@
 # Act-Beetl Change Log
 
-1.7.1 02/Jan/2019
+1.7.2 04/Mar/2020
+* update to act-1.8.32
+* update beetl to 3.0.19.RELEASE
+
+1.7.1 02/Jan/2020
 * update to act-1.8.31
 * update beetl to 3.0.16.RELEASE
 
