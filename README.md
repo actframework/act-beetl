@@ -1,3 +1,3 @@
-# act-freemarker
+# act-beetl
 
-Implement an ActFramework View with FreeMarker template engine
+Implement an ActFramework View with beetl template engine
