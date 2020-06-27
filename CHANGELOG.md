@@ -1,5 +1,9 @@
 # Act-Beetl Change Log
 
+1.8.0 27/Jul/2020
+* Update to act-1.8.33a
+* Update beetl to 3.1.8.RELEASE
+
 1.7.2 04/Mar/2020
 * update to act-1.8.32
 * update beetl to 3.0.19.RELEASE
