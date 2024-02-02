@@ -28,7 +28,7 @@
 
   <properties>
     <git.url>git@github.com:actframework/act-beetl.git</git.url>
-    <beetl.version>3.1.8.RELEASE</beetl.version>
+    <beetl.version>3.15.13.RELEASE</beetl.version>
   </properties>
 
   <parent>
